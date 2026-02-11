@@ -1,0 +1,20 @@
+---
+title: "Week 3B - Window Functions"
+author: "Kristoff Oliphant"
+date: "2026-02-11"
+output: html_document
+---
+
+# Assignment 3B: Window Functions
+
+## Introduction
+
+For this assignment, I am exploring Window Functions to analyze time series data. I have an interest in exploring cryptocurrency prices so I’ll make this my choice of focus.
+
+## Planned Workflow
+
+I will use a time series dataset containing daily prices for at least two different items which in this case will be cryptocurrency starting from January 1, 2022. I will implement a window function using dplyr or SQL to calculate the expanding average of prices from the beginning of the year up to the current date for each item. I will calculate a six day moving average for each item. This would involve creating a "sliding window" that averages the current day and the five preceding days to account for price fluctuations. Lastly, I will visualize or inspect the resulting data to ensure the window calculations correctly reset for each separate item in the dataset.
+
+## Anticipated Challenges
+
+A challenge I anticipate will be ensuring the window functions are correctly partitioned for multiple items so that they don’t risk mixing with each other. Additionally, handling the days of the dataset for a six day moving average will require mindfulness attention to ensure the window doesn't produce errors when there are not six days of history available at that moment.
