@@ -1,0 +1,78 @@
+---
+title: "Week 3A - Global Baseline Estimate"
+author: "Kristoff Oliphant"
+date: "2026-02-11"
+output: html_document
+---
+
+# Assignment 3A: Global Baseline Estimate
+
+## Introduction
+
+Last week I created a mini user-item rating dataset for 5 people to rate 6 movies from the year 2025-2026. For this assignment in week 3, I will continue where I left off and use the information I collected on movie ratings and implement a Global Baseline Estimate recommendation system in R.
+
+## Planned Workflow
+
+The way that I’ll approach my workflow this time is to use R again, pull the survey data I collected, and write the R code that makes a movie recommendation using the Global Baseline Estimate algorithm. Similar to the spreadsheet provided, I’ll pick one rater out of my group and assess what rating they would give for 1 of the 6 movies they have not watched.
+
+## Anticipated Challenges
+
+Some challenges I anticipate facing is to accurately utilize the Global Baseline Estimate algorithm. Additionally, I can tell that it needs to make sense with the mean movie rating, the selected movies rating relative to average, and lastly the user/rater of my choice rating relative to the average.
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+movie_rating_df <- read_csv("movie_rating.csv", show_col_types = FALSE) %>%
+  mutate(rating = as.numeric(rating))
+```
+
+```{r}
+head(movie_rating_df)
+```
+
+```{r}
+mu <- mean(movie_rating_df$rating, na.rm = TRUE)
+```
+
+```{r}
+cat("Global Mean (mu):", round(mu, 2))
+```
+
+```{r}
+movie_biases <- movie_rating_df %>%
+  group_by(movie) %>%
+  summarize(movie_avg = mean(rating, na.rm = TRUE)) %>%
+  mutate(bi = movie_avg - mu)
+```
+
+```{r}
+movie_biases
+```
+
+```{r}
+user_biases <- movie_rating_df %>%
+  group_by(person) %>%
+  summarize(user_avg = mean(rating, na.rm = TRUE)) %>%
+  mutate(bu = user_avg - mu)
+```
+
+```{r}
+user_biases
+```
+
+```{r}
+selected_bu <- user_biases %>% filter(person == "Dana") %>% pull(bu)
+selected_bi <- movie_biases %>% filter(movie == "Sinners") %>% pull(bi)
+```
+
+```{r}
+prediction <- mu + selected_bu + selected_bi
+```
+
+```{r}
+cat("Predicted rating for Dana on Sinners:", round(prediction, 2))
+```
+
+**Results:** We see that Dana has a predicted rating of 3.61. I would say that while Dana gave positive ratings for her other movies seen, the lower than average scores for Sinners from other viewers adjusted our expectation downward from the global mean.
